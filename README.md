@@ -17,7 +17,7 @@ This plugin provides easy integration of Box2D into the [Impact Game Engine](htt
 Copy the box2d directory into your `lib/plugins/` directory and require the `plugins.box2d.entity` and `plugins.box2d.game` files. Subclass your game from `ig.Box2DGame` and your entities from `ig.Box2DEntity`:
 
 	MyGame = ig.Box2DGame.extend({
-		…
+		â€¦
 	});
 
 
