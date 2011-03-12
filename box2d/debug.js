@@ -8,25 +8,31 @@ ig.module(
 
 
 ig.Box2DDebug = ig.Class.extend({
+	drawer: null,
 	world: null,
 	alpha: 1,
 	
 	init: function( world, alpha, thickness ) {
 		this.world = world;
 		
-		b2d = new b2.DebugDraw();
-		b2d.m_sprite = {graphics:this};
-		b2d.m_drawScale = 1 / b2.SCALE * ig.system.scale;
-		b2d.m_fillAlpha = alpha || 0.3;
-		b2d.m_lineThickness = thickness || 1.0;
-		b2d.m_drawFlags = b2.DebugDraw.e_shapeBit | b2.DebugDraw.e_jointBit;
-		this.world.SetDebugDraw( b2d );
+		this.drawer = new b2.DebugDraw();
+		this.drawer.m_sprite = {graphics:this};
+		this.drawer.m_drawScale = 1 / b2.SCALE * ig.system.scale;
+		this.drawer.m_fillAlpha = alpha || 0.3;
+		this.drawer.m_lineThickness = thickness || 1.0;
+		this.drawer.m_drawFlags = b2.DebugDraw.e_shapeBit | b2.DebugDraw.e_jointBit;
 	},
 	
 	draw: function() {
 		ig.system.context.save();
 		ig.system.context.translate( -ig.game.screen.x * ig.system.scale, -ig.game.screen.y * ig.system.scale );
+		
+		// Set debug drawer, draw and unset again, to prevent box2d
+		// from drawing on it's own during step()
+		this.world.SetDebugDraw( this.drawer );
 		this.world.DrawDebugData();
+		this.world.SetDebugDraw( null );
+		
 		ig.system.context.restore();
 	},
 
