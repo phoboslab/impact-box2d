@@ -22,32 +22,33 @@ ig.Box2DEntity = ig.Entity.extend({
 	},
 	
 	createBody: function() {
-		var bodyDef = new b2.BodyDef();
-		bodyDef.position.Set(
-			(this.pos.x + this.size.x / 2) * b2.SCALE,
-			(this.pos.y + this.size.y / 2) * b2.SCALE
-		);
-		
+		var bodyDef = new Box2D.Dynamics.b2BodyDef();
+		bodyDef.position = new Box2D.Common.Math.b2Vec2(
+			(this.pos.x + this.size.x / 2) * Box2D.SCALE,
+			(this.pos.y + this.size.y / 2) * Box2D.SCALE
+		); 
+		bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
 		this.body = ig.world.CreateBody(bodyDef);
-		
-		var shapeDef = new b2.PolygonDef();
-		shapeDef.SetAsBox(
-			this.size.x / 2 * b2.SCALE,
-			this.size.y / 2 * b2.SCALE
+
+		var fixture = new Box2D.Dynamics.b2FixtureDef;
+		fixture.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+		fixture.shape.SetAsBox(
+			this.size.x / 2 * Box2D.SCALE,
+			this.size.y / 2 * Box2D.SCALE
 		);
 		
-		shapeDef.density = 1;
-		//shapeDef.restitution = 0.0;
-		//shapeDef.friction = 0.9;
-		this.body.CreateShape(shapeDef);
-		this.body.SetMassFromShapes();
+		fixture.density = 1.0;
+		// fixture.friction = 0.5;
+		// fixture.restitution = 0.3;
+
+		this.body.CreateFixture(fixture);
 	},
 	
 	update: function() {		
 		var p = this.body.GetPosition();
 		this.pos = {
-			x: (p.x / b2.SCALE - this.size.x / 2),
-			y: (p.y / b2.SCALE - this.size.y / 2 )
+			x: (p.x / Box2D.SCALE - this.size.x / 2),
+			y: (p.y / Box2D.SCALE - this.size.y / 2 )
 		};
 		this.angle = this.body.GetAngle().round(2);
 		

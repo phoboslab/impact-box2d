@@ -15,12 +15,14 @@ ig.Box2DDebug = ig.Class.extend({
 	init: function( world, alpha, thickness ) {
 		this.world = world;
 		
-		this.drawer = new b2.DebugDraw();
-		this.drawer.m_sprite = {graphics:this};
-		this.drawer.m_drawScale = 1 / b2.SCALE * ig.system.scale;
-		this.drawer.m_fillAlpha = alpha || 0.3;
-		this.drawer.m_lineThickness = thickness || 1.0;
-		this.drawer.m_drawFlags = b2.DebugDraw.e_shapeBit | b2.DebugDraw.e_jointBit;
+		this.drawer = new Box2D.Dynamics.b2DebugDraw();
+		this.drawer.SetSprite(ig.system.context);
+
+		this.drawer.SetDrawScale(1 / Box2D.SCALE * ig.system.scale);
+		this.drawer.SetFillAlpha(alpha || 0.3);
+		this.drawer.SetLineThickness(thickness || 1.0);
+		this.drawer.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
+		world.SetDebugDraw(this.drawer);
 	},
 	
 	draw: function() {
